@@ -4,6 +4,9 @@ import RouteModule from './route'
 import PlacesCategory from './placesCategory'
 import Places from './places'
 import Province from './province'
+import AuthModule from './auth'
+import GeneralModule from './general'
+import UserModule from './user'
 
 Vue.use(Vuex)
 
@@ -12,6 +15,9 @@ export default new Vuex.Store({
     RouteModule,
     PlacesCategory,
     Places,
-    Province
+    Province,
+    GeneralModule,
+    AuthModule,
+    UserModule
   }
 })

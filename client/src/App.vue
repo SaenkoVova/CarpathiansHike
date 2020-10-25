@@ -10,6 +10,7 @@
 <script>
 
 import AppHeader from '@/components/AppHeader';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'App',
@@ -21,6 +22,16 @@ export default {
   data: () => ({
     
   }),
+  computed: {
+    ...mapGetters([
+      'getToken'
+    ])
+  },
+  created() {
+    if(this.getToken) {
+      this.$store.dispatch('AUTH_STATE_CHANGE', this.getToken)
+    }
+  }
 };
 </script>
 

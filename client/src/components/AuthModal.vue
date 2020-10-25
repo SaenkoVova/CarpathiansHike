@@ -14,7 +14,7 @@
       </template>
       <v-sheet
       >
-        <div class="pt-5 pb-5 pl-5 pr-5 mb-5">
+        <v-form v-model="valid" class="pt-5 pb-5 pl-5 pr-5 mb-5">
           <v-container fluid>
             <v-row>
               <v-col :md="11" :sm="11" :xs="11" :xl="11">
@@ -32,33 +32,42 @@
               </v-col>
             </v-row>
           </v-container>
-          <v-text-field
-            label="Email адреса"
-            :rules="emailRules"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            label="Пароль"
-            :rules="passRules"
-            type="password"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field v-if="loading"
-            color="success"
-            loading
-            disabled
-          ></v-text-field>
-          <v-container>
-            <v-row>
-              <v-col :md="2">
-                <v-btn block @click="logIn" :disabled="loading">Увійти</v-btn>
-              </v-col>
-              <v-col :md="3">
-                <v-btn block @click="sheet=false" :to="'/signup'" :disabled="loading">Зареєструватися</v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
+            <v-text-field
+              label="Email адреса"
+              :rules="emailRules"
+              hide-details="auto"
+              v-model="email"
+            ></v-text-field>
+            <v-text-field
+              label="Пароль"
+              :rules="passRules"
+              type="password"
+              hide-details="auto"
+              v-model="password"
+            ></v-text-field>
+            <v-text-field v-if="processing"
+              color="success"
+              loading
+              disabled
+            ></v-text-field>
+            <v-container>
+              <v-row>
+                <v-col :md="2">
+                  <v-btn block @click="logIn" :disabled="processing || !valid">Увійти</v-btn>
+                </v-col>
+                <v-col :md="3">
+                  <v-btn block @click="sheet=false" :to="'/signup'">Зареєструватися</v-btn>
+                </v-col>
+              </v-row>
+              <v-alert v-if="error"
+              border="top"
+              color="red lighten-2"
+              dark
+              >
+              {{error}}
+              </v-alert>
+            </v-container>
+        </v-form>
       </v-sheet>
     </v-bottom-sheet>
 </template>
@@ -76,7 +85,6 @@ export default {
   },
   data: () => ({
     sheet: false,
-    loading: false,
     emailRules: [
       value => !!value || 'Це поле обов`язкове.',
       value => (value && value.length >= 5) || 'Мінімум 5 символів',
@@ -85,15 +93,31 @@ export default {
       value => !!value || 'Це поле обов`язкове.',
       value => (value && value.length >= 5) || 'Мінімум 5 символів',
     ],
+    email: null,
+    password: null,
+    valid: false
   }),
+  computed: {
+    error() {
+      return this.$store.getters.getError;
+    },
+    processing() {
+      return this.$store.getters.getProcessing;
+    },
+    getAuthenticated() {
+      return this.$store.getters.getAuthenticated;
+    }
+  },
+  watch: {
+    getAuthenticated(val) {
+        if(val === true) {
+          this.sheet = false
+        }
+    }
+  },
   methods: {
     logIn() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.sheet = false;
-        this.$router.push('/')
-      }, 2000);
+      this.$store.dispatch('LOG_IN', {email: this.email, password: this.password});
     }
   },
   components: {
