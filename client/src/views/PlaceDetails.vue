@@ -1,64 +1,82 @@
 <template>
-  <v-container v-if="place">
-      <back-arrow :link="'/map'" :location="'карти'"></back-arrow>
-      <v-row>
-          <v-col :md="6" :sm="12" :xs="12">
-                <pages-headline :headline="place.title"></pages-headline>
-                <v-container fluid class="d-flex">
-                    <p v-if="place.massif">{{place.massif}}</p>
-                    <v-spacer></v-spacer>
-                    <p>Додано користувачем: {{place.creator}} Дата: {{place.creationDate}}</p>
-                </v-container>
-                <div>
-                    <article>
-                        <p>{{place.info}}</p>
-                    </article>
-                </div>
-                <div>
-                    <p>Висота над рівнем моря {{place.height}} м</p>
-                </div>
-          </v-col>
-          <v-col :md="6" :sm="12" :xs="12">
-              <Map :place="place"></Map>
-          </v-col>
-      </v-row>
-      <v-container fluid>
-        <pages-headline :headline="`Маршрути сюди`"></pages-headline>
-        <ul>
-            <li>Заросляк - о.Несамовите - г. Пожижевська - Заросляк</li>
-            <li>Перехід по Чорногірському хребту</li>
-            <li>Чорногора з села Говерла</li>
-            <li>Говерла з с.Лазещина</li>
-            <li>Петрос з с.Лазещина</li>
-        </ul>
-      </v-container>
-      <v-container fluid>
-        <pages-headline :headline="`Найближчі населені пункти`"></pages-headline>
-        <ul>
-            <li>Говерла (10.0 км)</li>
-            <li>Луги (11.5 км)</li>
-            <li>Вороненко (13.6 км)</li>
-        </ul>
-      </v-container>
-      <v-container fluid>
-        <pages-headline :headline="`Прогноз погоди для сусідніх населених пунктів`"></pages-headline>
-        <ul class="d-flex">
-            <li class="ml-5 mr-5">Село Говерла</li>
-            <li class="ml-5 mr-5">Село Вороненко</li>
-            <li class="ml-5 mr-5">Село Лазещина</li>
-        </ul>
-      </v-container>
-      <v-container fluid>
-          <v-row>
-              <v-col>
-                  <reviews-list></reviews-list>
-              </v-col>
-              <v-col>
-                  <gallery :images="images"></gallery>
-              </v-col>
-          </v-row>
-      </v-container>
-  </v-container>
+    <v-container>
+        <back-arrow :link="'/map'" :location="'карти'"></back-arrow>
+        <v-container v-if="getProcessing" class="d-flex justify-center align-center" style="height: 80vh">
+            <v-progress-circular 
+            :size="200"
+            indeterminate
+            color="primary"
+            ></v-progress-circular>
+        </v-container>
+        <v-container v-if="error">
+            <v-alert
+              border="top"
+              color="red lighten-2"
+              dark
+              >
+              {{error}}
+              </v-alert>
+        </v-container>
+        <div v-if="!getProcessing && place">
+            <v-row>
+                <v-col :md="6" :sm="12" :xs="12">
+                    <pages-headline :headline="place.place.title"></pages-headline>
+                    <v-container fluid class="d-flex">
+                        <p v-if="place.massif.title">{{place.massif.title}}</p>
+                        <v-spacer></v-spacer>
+                        <p>Додано користувачем: {{place.user.name}} Дата: {{place.place.creationDate}}</p>
+                    </v-container>
+                    <div>
+                        <article>
+                            <p>{{place.place.info}}</p>
+                        </article>
+                    </div>
+                    <div>
+                        <p>Висота над рівнем моря {{place.place.height}} м</p>
+                    </div>
+                </v-col>
+                <v-col :md="6" :sm="12" :xs="12">
+                    <Map :place="place.place"></Map>
+                </v-col>
+            </v-row>
+            <v-container fluid>
+                <pages-headline :headline="`Маршрути сюди`"></pages-headline>
+                <ul>
+                    <li v-for="(item, index) in place.place.routes" :key="index">Заросляк - о.Несамовите - г. Пожижевська - Заросляк</li>
+                    <li>Перехід по Чорногірському хребту</li>
+                    <li>Чорногора з села Говерла</li>
+                    <li>Говерла з с.Лазещина</li>
+                    <li>Петрос з с.Лазещина</li>
+                </ul>
+            </v-container>
+            <v-container fluid>
+                <pages-headline :headline="`Найближчі населені пункти`"></pages-headline>
+                <ul>
+                    <li>Говерла (10.0 км)</li>
+                    <li>Луги (11.5 км)</li>
+                    <li>Вороненко (13.6 км)</li>
+                </ul>
+            </v-container>
+            <v-container fluid>
+                <pages-headline :headline="`Прогноз погоди для сусідніх населених пунктів`"></pages-headline>
+                <ul class="d-flex">
+                    <li class="ml-5 mr-5">Село Говерла</li>
+                    <li class="ml-5 mr-5">Село Вороненко</li>
+                    <li class="ml-5 mr-5">Село Лазещина</li>
+                </ul>
+            </v-container>
+            <v-container fluid>
+                <v-row>
+                    <v-col>
+                        <reviews-list></reviews-list>
+                    </v-col>
+                    <v-col>
+                        <gallery :images="images"></gallery>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
+    </v-container>
 </template>
 
 <script>
@@ -68,11 +86,15 @@ import PagesHeadline from '@/components/PagesHeadline';
 import Map from '@/components/Map';
 import ReviewsList from '@/components/ReviewsList';
 import Gallery from '@/components/Gallery';
+import Axios from 'axios';
+import proxy from '@/proxy';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
     name: 'PlaceDetails',
     data: () => ({
         place: null,
+        error: null,
         images: [
             {
                 id: 1,
@@ -94,8 +116,34 @@ export default {
             required: true
         }
     },
+    computed: {
+        ...mapGetters([
+            'getProcessing'
+        ])
+    },
     mounted() {
-         this.place = this.$store.getters.getPlaces.find(place => place.id === +this.id)
+         this.getPlace();
+    },
+    methods: {
+        ...mapMutations([
+            'SET_PROCESSING'
+        ]),
+        getPlace() {
+            const id = this.$route.params.id;
+            this.SET_PROCESSING(true);
+            Axios.get(`${proxy.domen}/places/getPlaceById`, {
+                params: {id}
+            })
+                .then((data) => {
+                    this.place = data.data
+                    console.log(this.place)
+                    this.SET_PROCESSING(false)
+                })
+                .catch((error) => {
+                    this.error = error.response.data.message;
+                    this.SET_PROCESSING(false);
+                })
+        }
     },
     components: {
         BackArrow,

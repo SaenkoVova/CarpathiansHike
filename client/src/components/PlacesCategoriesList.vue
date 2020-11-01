@@ -2,7 +2,7 @@
   <v-row>
       <v-col>
               <p>Показувати об'єкти:</p>
-              <v-checkbox v-for="category in categories.slice(0, categories.length/2)" :key="category.id"
+              <v-checkbox v-for="category in categories.slice(0, categories.length/2)" :key="category._id"
                 v-model="category.id"
                 :label="category.title"
                 :disabled="checkedAll"
@@ -26,15 +26,16 @@
 
 <script>
 export default {
+    props: {
+        'categories': {
+            type: Array,
+            required: true
+        }
+    },
     data: () => ({
         checkbox1: true,
         checkedAll: false,
-    }),
-    computed: {
-        categories() {
-            return this.$store.getters.getPlacesCategories
-        }
-    }
+    })
 }
 </script>
 

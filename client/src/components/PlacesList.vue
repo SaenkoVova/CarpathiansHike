@@ -10,9 +10,10 @@
 import PlacesListItem from '@/components/PlacesListItem';
 
 export default {
-    computed: {
-        places() {
-            return this.$store.getters.getPlaces
+    props: {
+        'places': {
+            type: Array,
+            required: true
         }
     },
     components: {

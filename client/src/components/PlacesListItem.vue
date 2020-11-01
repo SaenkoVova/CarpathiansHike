@@ -6,21 +6,21 @@
       class="white--text align-end"
       height="250px"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.8)"
-      :src="place.image"
+      :src="require(`../assets/${place.data.previewImage}`)"
     >
       <v-card-title>
-          <router-link :to="`/places/${place.id}`" :tag="'span'" style="cursor: pointer;">
-              {{place.title}}
+          <router-link :to="`/places/${place.data._id}`" :tag="'span'" style="cursor: pointer;">
+              {{place.data.title}}
           </router-link>
       </v-card-title>
     </v-img>
 
     <v-card-subtitle class="pb-0 d-flex align-center">
         <span>
-            <img src="../assets/mountains.png" height="32" width="32">
+            <img :src="require(`../assets/${place.category.image}`)" height="32" width="32">
         </span>
-        <span>
-            {{getCategoryById(place.categoryId).title}}
+        <span class="ml-2">
+            {{place.category.title}}
         </span>
         <v-spacer></v-spacer>
         <span>
@@ -29,17 +29,17 @@
     </v-card-subtitle>
 
     <v-card-text class="text--primary">
-      <p>Висота над рівнем моря: {{place.height}} м</p>
+      <p>Висота над рівнем моря: {{place.data.height}} м</p>
       <article>
-          <span>{{place.info.slice(0, 200)}}</span>
-          <router-link :to="`/places/${place.id}`" :tag="'span'" style="cursor: pointer; color: orange;">
+          <span>{{place.data.info.slice(0, 200)}}</span>
+          <router-link :to="`/places/${place.data._id}`" :tag="'span'" style="cursor: pointer; color: orange;">
               <span>...</span>
           </router-link>
       </article>
     </v-card-text>
 
     <v-card-actions>
-      <v-btn :to="`/places/${place.id}`"
+      <v-btn :to="`/places/${place.data._id}`"
         color="orange"
         dark
         block
@@ -65,16 +65,8 @@ export default {
             required: true
         }
     },
-    computed: {
-        getCategories() {
-            return this.$store.getters.getPlacesCategories;
-        }
-    },
     methods: {
-        getCategoryById(id) {
-            const category = this.getCategories.find(i => i.id === id);
-            return category;
-        }
+        
     }
 }
 </script>

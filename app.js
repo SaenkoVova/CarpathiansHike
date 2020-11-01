@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const AuthRoute = require('./routes/auth.route');
+const CategoriesRoute = require('./routes/categories.route');
+const PlacesRoute = require('./routes/places.route');
 
 const PORT = config.get('port') || 5000;
 
@@ -12,6 +14,8 @@ app.use(cors());
 app.use(express.json({ extended: true }));
 
 app.use('/api/auth', AuthRoute);
+app.use('/api/categories', CategoriesRoute);
+app.use('/api/places', PlacesRoute)
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'client', 'dist')));

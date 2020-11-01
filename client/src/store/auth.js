@@ -24,6 +24,7 @@ export default {
             Axios.post(`${proxy.domen}/auth/signup`, payload)
                 .then((data) => {
                     commit('SET_AUTH', data.data.token)
+                    commit('SET_USER', {name: data.data.name})
                     commit('SET_PROCESSING', false)
                 })
                 .catch((error) => {

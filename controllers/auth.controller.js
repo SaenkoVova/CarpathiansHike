@@ -38,7 +38,8 @@ exports.signUp = async (req, res) => {
             {expiresIn: '1h'}
         );
         await res.json({
-            token
+            token,
+            name: user.name
         })
 
     } catch(e) {
@@ -86,7 +87,6 @@ exports.authStateChanged = async (req, res) => {
         
         res.status(200).json({name: user.name});
     } catch(e) {
-        console.log(e)
         res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
     }
 }

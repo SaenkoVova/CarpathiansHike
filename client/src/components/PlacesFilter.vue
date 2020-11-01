@@ -2,7 +2,7 @@
   <v-container fluid>
       <v-row>
           <v-col :md="8">
-              <places-categories-list></places-categories-list>
+              <places-categories-list :categories="categories"></places-categories-list>
           </v-col>
           <v-col :md="4">
                 <v-text-field class="mb-4"
@@ -24,6 +24,12 @@
 import PlacesCategoriesList from '@/components/PlacesCategoriesList';
 
 export default {
+    props: {
+        'categories': {
+            type: Array,
+            required: true
+        }
+    },
     data: () => ({
         checkbox1: true,
         checkedAll: false,
@@ -31,11 +37,6 @@ export default {
             value => (value && value.length >= 3) || 'Min 3 characters',
         ],
     }),
-    computed: {
-        categories() {
-            return this.$store.getters.getPlacesCategories
-        }
-    },
     components: {
         PlacesCategoriesList
     }
