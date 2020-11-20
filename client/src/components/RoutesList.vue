@@ -11,9 +11,10 @@
 import RoutesListItem from '@/components/RoutesListItem';
 
 export default {
-    computed: {
-        routes() {
-            return this.$store.getters.getRoutes
+    props: {
+        'routes': {
+            type: Array,
+            required: true
         }
     },
     components: {

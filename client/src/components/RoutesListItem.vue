@@ -5,12 +5,12 @@
         max-width="100%"
     >
         <v-img
-        :src="route.image"
+        :src="require(`../assets/${route.previewImage}`)"
         :height="250"
         ></v-img>
 
         <v-card-title>
-            <router-link class="black--text" :tag="'span'" style="cursor: pointer;" :to="`/routes/${route.id}`">
+            <router-link class="black--text" :tag="'span'" style="cursor: pointer;" :to="`/routes/${route._id}`">
                 {{route.path}}
             </router-link>
         </v-card-title>
@@ -23,7 +23,7 @@
         <v-btn
             color="orange"
             dark
-            :to="`/routes/${route.id}`"
+            :to="`/routes/${route._id}`"
         >
             Детальніше
         </v-btn>

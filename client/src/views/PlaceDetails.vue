@@ -68,10 +68,13 @@
             <v-container fluid>
                 <v-row>
                     <v-col>
-                        <reviews-list></reviews-list>
+                        <reviews-list 
+                            @pushReviewImageToGallery="pushReviewImageToGallery"
+                            :allowReview="place.place.allowReview"
+                            :mode="'place'"/>
                     </v-col>
                     <v-col>
-                        <gallery :images="images"></gallery>
+                        <gallery :images="place.place.images"></gallery>
                     </v-col>
                 </v-row>
             </v-container>
@@ -95,20 +98,6 @@ export default {
     data: () => ({
         place: null,
         error: null,
-        images: [
-            {
-                id: 1,
-                src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg'
-            },
-            {
-                id: 2,
-                src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg'
-            },
-            {
-                id: 3,
-                src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg'
-            }
-        ]
     }),
     props: {
         'id': {
@@ -128,6 +117,9 @@ export default {
         ...mapMutations([
             'SET_PROCESSING'
         ]),
+        pushReviewImageToGallery(images) {
+            this.place.place.images = [...this.place.place.images, ...images]
+        },
         getPlace() {
             const id = this.$route.params.id;
             this.SET_PROCESSING(true);
@@ -136,7 +128,6 @@ export default {
             })
                 .then((data) => {
                     this.place = data.data
-                    console.log(this.place)
                     this.SET_PROCESSING(false)
                 })
                 .catch((error) => {

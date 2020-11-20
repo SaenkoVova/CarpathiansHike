@@ -3,27 +3,28 @@
         <div v-if="route" style="height: 800px;">
             <l-map
             :zoom="zoom"
-            :center="[route.startLt, route.startLg]"
+            :center="[route.start.lt, route.start.lg]"
             @update:zoom="zoomUpdated"
             @update:center="centerUpdated"
             @update:bounds="boundsUpdated"
             >
                 <l-tile-layer :url="url"></l-tile-layer>
-                <l-marker :lat-lng="[route.startLt, route.startLg]">
+                <l-geo-json :geojson="geoJson" :optionsStyle="{color: 'red'}"></l-geo-json>
+                <l-marker :lat-lng="[route.start.lt, route.start.lg]">
                     <l-icon
                             :icon-size="dynamicSize"
                             :icon-anchor="dynamicAnchor"
                             :icon-url="require(`../assets/location-pin.png`)" >
                     </l-icon>
                 </l-marker>
-                <l-marker :lat-lng="[route.endLt, route.endLg]">
+                <l-marker :lat-lng="[route.end.lt, route.end.lg]">
                     <l-icon
                             :icon-size="dynamicSize"
                             :icon-anchor="dynamicAnchor"
                             :icon-url="require(`../assets/location-pin.png`)" >
                     </l-icon>
                 </l-marker>
-                <l-geo-json :geojson="route.geoJson" :optionsStyle="{color: 'red'}"></l-geo-json>
+                
             </l-map>
         </div>
         <div v-if="place" style="height: 400px">
@@ -89,6 +90,7 @@ export default {
             url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             zoom: 12,
             iconSize: 40,
+            geoJson: null
         };
     },
     computed: {
@@ -117,6 +119,11 @@ export default {
             this.bounds = bounds;
         }
     },
+    created() {
+        if(this.route) {
+            this.geoJson = require(`../../public/geoJson/${this.route.route.geoJson}`)
+        }
+    }
 }
 </script>
 

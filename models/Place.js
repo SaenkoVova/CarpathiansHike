@@ -19,7 +19,7 @@ const schema = new Schema({
     routes: [{type: Types.ObjectId, ref: 'Route'}],
     reviews: [{type: Types.ObjectId, ref: 'Review'}],
     images: [{type: String}],
-    previewImage: {type: String, required: true}
+    previewImage: {type: String, required: true},
 })
 
 module.exports = model('Place', schema)

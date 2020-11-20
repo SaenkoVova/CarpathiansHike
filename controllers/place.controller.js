@@ -42,7 +42,6 @@ module.exports.getPlaceById = async (req, res) => {
         }
         res.status(200).json(data)
     } catch(e) {
-        console.log(e)
         res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
     }
 }

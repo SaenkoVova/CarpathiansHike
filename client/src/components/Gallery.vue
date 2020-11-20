@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <v-card v-if="images"
     class="mx-auto"
     max-width="500"
   >
@@ -20,7 +20,7 @@
         >
           <v-card >
             <v-img @click="show"
-              :src="image.src"
+              :src="require(`../assets/${image}`)"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="200px"
             >

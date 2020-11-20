@@ -10,18 +10,24 @@
     >
       <v-toolbar-title>Коментарі</v-toolbar-title>
       <v-spacer></v-spacer>
-        <auth-modal :title="'Додати коментар або фото'"></auth-modal>
+        <auth-modal v-if="allowReview && !getAuthenticated" :title="'Додати коментар або фото'"></auth-modal>
+        <review-modal v-if="allowReview && getAuthenticated" :mode="mode" @makeReview="pushToReviews"></review-modal>
     </v-toolbar>
 
     <v-container fluid>
         <v-list three-line>
-            <template v-for="item in items">
+            <template v-for="item in reviews">
                 <v-list-item
                 :key="item.title"
                 >
                 <v-list-item-content>
-                    <v-list-item-title>{{item.title}}</v-list-item-title>
-                    <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                    <v-list-item-title>{{item.owner.name}} {{item.creationTime}}</v-list-item-title>
+                    <v-list-item-subtitle v-html="item.text"></v-list-item-subtitle>
+                    <div class="d-flex">
+                      <div v-for="(filename, index) in item.attachments" :key="index" style="margin: 5px">
+                        <img height="90" width="90" :src="require(`../assets/${filename}`)" :alt="filename">
+                      </div>
+                    </div>
                 </v-list-item-content>
                 </v-list-item>
             </template>
@@ -33,34 +39,53 @@
 <script>
 
 import AuthModal from '@/components/AuthModal';
+import ReviewModal from '@/components/ReviewModal';
+import { mapGetters } from 'vuex';
+import Axios from 'axios';
+import proxy from '@/proxy';
 
 export default {
+    props: {
+      'allowReview': {
+        required: true,
+        type: Boolean
+      },
+      'mode': {
+        required: true,
+        type: String
+      }
+    },
     data: () => ({
-      items: [
-        {
-          title: 'Administrator - 2020-05-13 04:28:21',
-          subtitle: "sdslfjlkfjsldjflskjdflksjlkdfjslkjdflksjflksjlfkjsdlfkjljljl",
-        },
-        {
-          title: 'Summer BBQ',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-        },
-        {
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-        },
-        {
-          title: 'Birthday gift',
-          subtitle: "<span class='text--primary'>Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?",
-        },
-        {
-          title: 'Recipe to try',
-          subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-        },
-      ],
+      reviews: []
     }),
+    computed: {
+      ...mapGetters([
+        'getAuthenticated'
+      ])
+    },
+    methods: {
+      pushToReviews(review) {
+        this.reviews.push(review);
+        this.$emit('pushReviewImageToGallery', review.attachments);
+      },
+      getReviews() {
+        const id = this.$route.params.id;
+        Axios.get(
+          `${proxy.domen}/reviews/getReviews`, {
+            params: {id, mode: this.mode}
+          }
+        )
+          .then((data) => {
+            this.reviews = data.data.reviews;
+          })
+      }
+    },
+    mounted() {
+      this.getReviews();
+    },
     components: {
-        AuthModal
+        AuthModal,
+        ReviewModal
     }
 }
 </script>

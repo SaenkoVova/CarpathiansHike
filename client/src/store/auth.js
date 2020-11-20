@@ -9,6 +9,7 @@ export default {
         SET_AUTH(state, payload) {
             window.localStorage.removeItem('token');
             window.localStorage.setItem('token', JSON.stringify(payload));
+            state.token = payload;
             state.isAuthenticated = true;
         },
         UNSET_AUTH(state) {

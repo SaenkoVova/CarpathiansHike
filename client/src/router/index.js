@@ -45,6 +45,11 @@ const routes = [
     path: '/map',
     name: 'MapView',
     component: () => import('../views/Map')
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('../views/Profile')
   }
 ]
 
