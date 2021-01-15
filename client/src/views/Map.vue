@@ -6,7 +6,7 @@
     <v-row>
         <v-col :md="3" v-if="showFilters">
             <v-container>
-                <places-categories-list></places-categories-list>
+                <places-categories-list :categories="placesCategories"></places-categories-list>
             </v-container>
         </v-col>
         <v-col :md="9" v-if="showFilters">
@@ -21,16 +21,30 @@
 import Map from '@/components/Map';
 import AuthModal from '@/components/AuthModal';
 import PlacesCategoriesList from '@/components/PlacesCategoriesList';
+import Axios from 'axios';
+import proxy from '@/proxy';
 
 export default {
     name: 'MapView',
     data: () => ({
-        showFilters: true
+        showFilters: true,
+        placesCategories: []
     }),
     components: {
         Map,
         AuthModal,
         PlacesCategoriesList
+    },
+    methods: {
+        getPlacesCategories() {
+            Axios.get(`${proxy.domen}/categories/getPlacesCategories`)
+            .then((data) => {
+                this.placesCategories = data.data.categories
+            })
+        },
+    },
+    mounted() {
+        this.getPlacesCategories()
     }
 }
 </script>

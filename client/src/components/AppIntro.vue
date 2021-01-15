@@ -12,7 +12,7 @@
         cols="12"
       >
         <h1 class="display-1 font-weight-normal mb-4">
-          В похід карпатами
+          Мандри Карпатами
         </h1>
         <h4 class="subheading">
           Сплануй свій відпочинок сьогодні!

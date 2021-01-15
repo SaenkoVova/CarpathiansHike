@@ -45,7 +45,10 @@
                     <gallery :images="route.route.images"></gallery>
                 </v-col>
                 <v-col>
-                    <reviews-list></reviews-list>
+                    <reviews-list 
+                            @pushReviewImageToGallery="pushReviewImageToGallery"
+                            :allowReview="route.route.allowReview"
+                            :mode="'place'"/>
                 </v-col>
             </v-row>
             <v-row>
@@ -79,6 +82,9 @@ export default {
         ...mapMutations([
             'SET_PROCESSING'
         ]),
+        pushReviewImageToGallery(images) {
+            this.route.route.images = [...this.route.route.images, ...images]
+        },
         getRoutes() {
             const id = this.$route.params.id;
             this.SET_PROCESSING(true);

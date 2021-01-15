@@ -3,9 +3,9 @@
       <v-col>
               <p>Показувати об'єкти:</p>
               <v-checkbox v-for="category in categories.slice(0, categories.length/2)" :key="category._id"
-                v-model="category.id"
                 :label="category.title"
                 :disabled="checkedAll"
+                @change="stateChanged(category._id, $event)"
                 ></v-checkbox>
           </v-col>
           <v-col>
@@ -14,11 +14,11 @@
                 v-model="checkedAll"
                 label="Всі"
                 ></v-checkbox>
-                <v-checkbox v-for="(category, index) in categories.slice(categories.length/2, categories.length)" :key="category.id"
-                v-model="category.id"
+                <v-checkbox v-for="(category, index) in categories.slice(categories.length/2, categories.length)" :key="category._id"
                 v-bind:class="[{'ma-0' : index === 0}, {'pa-0': index === 0}]"
                 :label="category.title"
                 :disabled="checkedAll"
+                @change="stateChanged(category._id, $event)"
                 ></v-checkbox>
           </v-col>
   </v-row>
@@ -30,6 +30,11 @@ export default {
         'categories': {
             type: Array,
             required: true
+        },
+    },
+    methods: {
+        stateChanged(id, state) {
+            this.$emit('stateChanged', {id, state})
         }
     },
     data: () => ({

@@ -1,5 +1,6 @@
 <template>
   <v-bottom-sheet
+      :z-index="1000"
       v-model="sheet"
       inset
     >

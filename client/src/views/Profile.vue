@@ -1,7 +1,7 @@
 <template>
   <v-container>
       <pages-headline :headline="'Панель керування'"></pages-headline>
-      <v-row>
+      <v-row v-if="user">
           <v-col>
             <div>
                 <h2 class="title">Інформація про вхід</h2>
@@ -9,17 +9,35 @@
                     <tr>
                         <td>Емейл</td>
                         <td>{{user.email}}</td>
-                        <td><v-btn dark :color="'orange'">Змінити</v-btn></td>
+                        <td>
+                            <user-update-modal
+                            :modalTitle="'емейл'"
+                            :modalDataValue="user.email"
+                            :modalId="'email'"
+                            @emailUpdated="updateEmail"></user-update-modal>
+                        </td>
                     </tr>
                     <tr>
                         <td>Ваше ім'я</td>
                         <td>{{user.name}}</td>
-                        <td><v-btn dark :color="'orange'">Змінити</v-btn></td>
+                        <td>
+                            <user-update-modal 
+                            :modalTitle="'ім`я'"
+                            :modalDataValue="user.name"
+                            :modalId="'name'"
+                            @nameUpdated="updateName"
+                            ></user-update-modal>
+                        </td>
                     </tr>
                     <tr>
                         <td>Пароль</td>
                         <td>********</td>
-                        <td><v-btn dark :color="'orange'">Змінити</v-btn></td>
+                        <td>
+                            <user-update-modal
+                            :modalTitle="'пароль'"
+                            :modalId="'password'">
+                            </user-update-modal>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -31,9 +49,19 @@
                           <h2 class="title">Зображення профілю</h2>
                           <table>
                               <tr>
-                                  <td v-if="!user.avatar"><img height="100" width="100" src="../assets/default-user-image.png" alt="avatar"></td>
-                                  <td v-else><img :src="require(`../assets/${user.avatar}`)" alt="avatar"></td>
-                                  <td><v-btn dark :color="'orange'">Змінити</v-btn></td>
+                                  <td v-if="!user.avatar">
+                                      <img height="100" width="100" src="../assets/default-user-image.png" alt="avatar">
+                                    </td>
+                                  <td v-else>
+                                      <img height="100" width="100" :src="require(`../assets/avatars/${user.avatar}`)" alt="avatar">
+                                    </td>
+                                  <td>
+                                      <user-update-modal
+                                      :modalTitle="'зображення профілю'"
+                                      :modalId="'avatar'"
+                                      @avatarUpdated="updateAvatar">
+                                      </user-update-modal>
+                                  </td>
                               </tr>
                           </table>
                       </div>
@@ -69,6 +97,7 @@
                                   </td>
                               </tr>
                           </table>
+                          <v-btn dark block :color="'orange'">Зберегти зміни</v-btn>
                       </div>
                   </v-col>
               </v-row>
@@ -84,6 +113,7 @@ import PagesHeadline from '@/components/PagesHeadline';
 import Axios from 'axios';
 import proxy from '@/proxy';
 import { mapGetters } from 'vuex';
+import UserUpdateModal from '@/components/UserUpdateModal';
 
 export default {
     name: 'Profile',
@@ -101,7 +131,7 @@ export default {
                 `${proxy.domen}/user/getUser`,
                 {
                     headers: {
-                        Authorization: `Bearer ${this.getToken}`
+                        Authorization: `Bearer ${this.getToken}`,
                     }
                 }
             )
@@ -110,27 +140,30 @@ export default {
                     console.log(this.user)
                 })
         },
-        updateUser() {
-            Axios.post(
-                `${proxy.domen}/user/updateUser`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${this.getToken}`
-                    }
-                }
-            )
+        updateEmail(email) {
+            this.user.email = email;
+        },
+        updateName(name) {
+            this.user.name = name;
+        },
+        updateAvatar(avatar) {
+            this.user.avatar = avatar;
         }
     },
     mounted() {
         this.getUser();
     },
     components: {
-        PagesHeadline
+        PagesHeadline,
+        UserUpdateModal
     }
 }
 </script>
 
-<style>
+<style scoped>
+    table {
+        width: 100%;
+    }
     td {
         padding: 10px 20px 10px 0;
     }

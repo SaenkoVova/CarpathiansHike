@@ -7,15 +7,26 @@ const Massif = require('../models/Massif');
 
 module.exports.getPlaces = async (req, res) => {
     try {
-        let {showedItems, page} = req.query;
+        let {showedItems, page, selected, search} = req.query;
+        if(parseInt(selected, 10) !== -1) {
+            selected = selected.split(',');
+        }
         showedItems = parseInt(showedItems, 10);
         page = parseInt(page, 10);
         let places = [];
         if(page === 1) {
-            placesCursor = await Place.find({}, 'title info height previewImage categoryId').limit(showedItems).cursor();  
+            placesCursor = await Place.find({title: {$regex: search}}, 'title info height previewImage categoryId').limit(showedItems).cursor();
+            if(selected != -1) {
+                placesCursor = await Place.find({'categoryId': {$in: selected}, title: {$regex: search}},
+                'title info height previewImage categoryId').limit(showedItems).cursor();
+            }
         }
         else {
             placesCursor = await Place.find().skip(showedItems * (page - 1)).limit(showedItems).cursor();
+            if(selected != -1) {
+                placesCursor = await Place.find({'categoryId': {$in: selected}},
+                'title info height previewImage categoryId').skip(showedItems * (page - 1)).limit(showedItems).cursor();
+            }
         }
         for (let doc = await placesCursor.next(); doc != null; doc = await placesCursor.next()) {
             let tmp = {}

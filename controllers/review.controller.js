@@ -25,7 +25,6 @@ module.exports.makeReview = async (req, res) => {
             res.status(500).json({message: 'Залиште, будь ласка, відгук'});
         }
         if(process.env.NODE_ENV === 'production') {
-            console.log('req', req.body.review);
             for(const file of req.files) {
                 await sharp(file.path)
                     .toFile(`./client/dist/img/${file.originalname}`);

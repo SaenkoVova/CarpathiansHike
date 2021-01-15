@@ -8,15 +8,12 @@
         <v-col>
           <v-row>
             <v-col>
-              <v-btn block dark @click="showFilter = !showFilter">{{filterButtonTitle}}</v-btn>
-            </v-col>
-            <v-col>
-              <v-btn block dark color="orange">Села та міста</v-btn>
+              <v-btn block dark :color="'orange'" @click="showFilter = !showFilter">{{filterButtonTitle}}</v-btn>
             </v-col>
           </v-row>
         </v-col>
       </v-row>
-      <places-filter v-if="showFilter" :categories="placesCategories"></places-filter>
+      <places-filter v-if="showFilter" :categories="placesCategories" @startFilter="startFilter" @hideFilter="showFilter = false"></places-filter>
       <places-list :places="places" v-if="!getProcessing"></places-list>
       <v-container v-if="getProcessing" class="d-flex justify-center">
         <v-progress-circular 
@@ -25,12 +22,15 @@
         color="primary"
       ></v-progress-circular>
       </v-container>
-      <v-pagination
-      @input="getPlaces"
-      v-model="page"
-      :length="4"
-      circle
-    ></v-pagination>
+      <div v-if="!getProcessing">
+        <alert v-if="places.length === 0" :message="'За вашим запитом нічого не знайдено'" :type="'warning'"></alert>
+        <v-pagination
+        @input="getPlaces"
+        v-model="page"
+        :length="4"
+        circle
+      ></v-pagination>
+      </div>
   </v-container>
 </template>
 
@@ -40,6 +40,7 @@ import PagesHeadline from '@/components/PagesHeadline';
 import BackArrow from '@/components/BackArrow';
 import PlacesFilter from '@/components/PlacesFilter';
 import PlacesList from '@/components/PlacesList';
+import Alert from '@/components/Alert';
 import Axios from 'axios';
 import proxy from '@/proxy';
 import { mapGetters, mapMutations } from 'vuex';
@@ -51,7 +52,7 @@ export default {
       placesCategories: [],
       places: [],
       page: 1,
-      showedItems: 10
+      showedItems: 10,
     }),
     computed: {
       ...mapGetters([
@@ -69,13 +70,15 @@ export default {
             this.placesCategories = data.data.categories
           })
       },
-      getPlaces() {
+      getPlaces(selectedCategories = [], search) {
         this.SET_PROCESSING(true)
         Axios.get(`${proxy.domen}/places/getPlaces`,
           {
             params: {
               showedItems: this.showedItems,
-              page: this.page
+              page: this.page,
+              selected: selectedCategories.join(',') || -1,
+              search: search || ''
             }
           }
         )
@@ -83,6 +86,9 @@ export default {
             this.places = data.data.places;
             this.SET_PROCESSING(false)
           })
+      },
+      startFilter(selectedCategories, search) {
+        this.getPlaces(selectedCategories, search);
       }
     },
     created() {
@@ -93,12 +99,13 @@ export default {
       PagesHeadline,
       BackArrow,
       PlacesFilter,
-      PlacesList
+      PlacesList,
+      Alert
     }
 
 }
 </script>
 
-<style>
-
+<style scoped>
+  
 </style>

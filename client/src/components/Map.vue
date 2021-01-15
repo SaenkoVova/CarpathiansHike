@@ -29,13 +29,14 @@
         </div>
         <div v-if="place" style="height: 400px">
             <l-map
-            :zoom="15"
+            :zoom="13"
             :center="[place.lt, place.lg]"
             @update:zoom="zoomUpdated"
             @update:center="centerUpdated"
             @update:bounds="boundsUpdated"
             >
                 <l-tile-layer :url="url"></l-tile-layer>
+                <l-geo-json :geojson="geoJson" :optionsStyle="{color: '#686de0'}"></l-geo-json>
                 <l-marker :lat-lng="[place.lt, place.lg]">
                     <l-icon
                             :icon-size="dynamicSize"
@@ -122,6 +123,10 @@ export default {
     created() {
         if(this.route) {
             this.geoJson = require(`../../public/geoJson/${this.route.route.geoJson}`)
+        }
+        if(this.place) {
+            console.log(this.place)
+            this.geoJson = require(`../../public/geoJson/${this.place.geoJson}`)
         }
     }
 }

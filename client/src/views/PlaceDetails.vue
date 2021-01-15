@@ -36,6 +36,22 @@
                     </div>
                 </v-col>
                 <v-col :md="6" :sm="12" :xs="12">
+                    <div>
+                        <ul class="d-flex justify-space-around pb-5">
+                            <li v-if="place.place.transportHub">
+                                <tooltip :description="'Транспортний вузол'" :icon="'mdi-cursor-pointer'"></tooltip>
+                            </li>
+                            <li v-if="place.place.tourCity">
+                                <tooltip :description="'Важливе туристичне місто чи село'" :icon="'mdi-star-check'"></tooltip>
+                            </li>
+                            <li v-if="place.place.publicTransport">
+                                <tooltip :description="'Є інформація про публічний транспорт'" :icon="'mdi-train-variant'"></tooltip>
+                            </li>
+                            <li v-if="place.place.railwayConnection">
+                                <tooltip :description="'Є залізничне сполучення'" :icon="'mdi-go-kart-track'"></tooltip>
+                            </li>
+                        </ul>
+                    </div>
                     <Map :place="place.place"></Map>
                 </v-col>
             </v-row>
@@ -89,6 +105,7 @@ import PagesHeadline from '@/components/PagesHeadline';
 import Map from '@/components/Map';
 import ReviewsList from '@/components/ReviewsList';
 import Gallery from '@/components/Gallery';
+import Tooltip from '@/components/Tooltip';
 import Axios from 'axios';
 import proxy from '@/proxy';
 import { mapGetters, mapMutations } from 'vuex';
@@ -141,11 +158,15 @@ export default {
         PagesHeadline,
         Map,
         ReviewsList,
-        Gallery
+        Gallery,
+        Tooltip
     }
 }
 </script>
 
-<style>
-
+<style scoped>
+    ul {
+        list-style: none;
+        padding: 0;
+    }
 </style>

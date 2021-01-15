@@ -2,7 +2,7 @@
     <v-app-bar app dark style="z-index: 1001;">
 
         <v-toolbar-title>
-            <router-link :to="'/'" tag="span" style="cursor: pointer;">В похід карпатами</router-link>
+            <router-link :to="'/'" tag="span" style="cursor: pointer;">Мандри Карпатами</router-link>
         </v-toolbar-title>
 
       <v-spacer></v-spacer>
