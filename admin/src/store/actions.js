@@ -8,7 +8,6 @@ export default {
                 .then(response => {
                     const token = response.data.token;
                     const user = response.data.name;
-                    console.log(response)
                     localStorage.setItem('token', token);
                     localStorage.setItem('user', user);
                     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -20,6 +19,14 @@ export default {
                     localStorage.removeItem('token');
                     reject(err);
                 })
+        })
+    },
+    logout({commit}) {
+        return new Promise((resolve) => {
+            commit('logout');
+            localStorage.removeItem('token');
+            delete axios.defaults.headers.common['Authorization']
+            resolve()
         })
     }
 }

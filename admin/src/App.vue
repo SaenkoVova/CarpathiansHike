@@ -16,11 +16,9 @@ export default {
       },
       (error) => {
         if(error.response.status === 401) {
-          if(this.$store.getters.authorized) {
-            this.$store.dispatch('refreshtoken');
-          } else {
-            return Promise.reject(error);
-          }
+          this.$store.dispatch('logout').then(() => {
+            this.$router.push('/')
+          })
         } else {
           return Promise.reject(error);
         }
