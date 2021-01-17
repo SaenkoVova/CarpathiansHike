@@ -43,6 +43,10 @@ export default [
                 path: '',
                 name: 'Dashboard',
                 component: () => import('@/components/DashViews/Dashboard.vue')
+            },
+            {
+                path: '/:tableName',
+                component: () => import('@/components/DashViews/TemplateTables.vue')
             }
         ]
     }

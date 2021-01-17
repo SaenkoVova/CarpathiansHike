@@ -1,5 +1,5 @@
 <template>
-    <v-app
+    <v-app app
         id="dashboard-view"
         dark>
         <core-toolbar />
