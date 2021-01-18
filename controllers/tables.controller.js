@@ -11,10 +11,9 @@ exports.readTable = async (req, res) => {
     let collection = [];
     switch(tableName) {
         case 'users':
-            collection = await User.find();
+            collection = await User.find({}, 'avatar newsSubscribe allowReview allowReply name email');
             break;
     }
-    collection.map(i => i.password = '*********');
     res.status(200).json({collection})
 }
 

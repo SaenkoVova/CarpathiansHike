@@ -39,54 +39,14 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col
+                  <v-col v-for="(value, propertyName, index) in editedItem" :key="index"
                     cols="12"
                     sm="6"
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="editedItem[`${propertyName}`]"
+                      :label="propertyName"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -125,21 +85,44 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
+    <template v-slot:body="props">
+      <tr v-for="(index, i) in props.items" :key="i">
+        <td v-for="(header, i) in headers" :key="i">
+          <v-checkbox v-if="header.type === 'Boolean'"
+            v-model="index[header.value]"
+            readonly
+            :color="'orange'"
+            dark
+          ></v-checkbox>
+          <v-img v-else-if="header.type === 'File'"
+            max-height="100"
+            max-width="100"
+            :src="require(`@/assets/logo.png`)"
+          >
+            <div class="fill-height bottom-gradient"></div>
+          </v-img>
+          <div v-else-if="header.value === 'actions'">
+            <v-icon
+              small
+              class="mr-2"
+              @click="editItem(item)"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+              small
+              @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
+          </div>
+          <div v-else>
+            {{index[header.value]}}
+          </div>
+        </td>
+      </tr>
     </template>
+    
     <template v-slot:no-data>
       <v-btn
         color="primary"
@@ -168,25 +151,14 @@ export default {
     collection: [],
     editedIndex: -1,
     tableInfo: null,
-    editedItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
-      defaultItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
+    editedItem: {},
+    defaultItem: {},
+    checkbox: true
   }),
 
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'Навий запис' : 'Редагувати запис'
     },
     currentTable () {
       return this.$store.getters.tableList;
@@ -215,7 +187,6 @@ export default {
         })
     }
   },
-  // called when page is created before dom
   created () {
     if(this.$store.getters.tableList.length != 0)
     {
@@ -228,7 +199,7 @@ export default {
           }
         })
           .then(response => {
-            console.log(response)
+            this.collection = response.data.collection;
           })
           .catch(err => {
             console.log(err)
@@ -243,13 +214,21 @@ export default {
       return new Promise((resolve) => {
         this.tableInfo = this.$store.getters.tableList.find(t => t.name === this.tableName);
         for(let item of this.tableInfo.collectionFileds) {
-          let field = {
-            text: item.slag,
-            value: item.name
+          if(item.name != '_id') {
+            let field = {
+              text: item.slag,
+              value: item.name,
+              type: item.fieldType
+            }
+            this.headers.push(field);
           }
-          this.headers.push(field);
         }
         this.headers.push({ text: 'Дії', value: 'actions', sortable: false })
+        for(let item of this.headers) {
+          this.editedItem[`${item.value}`] = 0;
+        }
+        console.log(this.headers)
+        this.defaultItem = this.editedItem;
         resolve()
       })
     },
@@ -299,11 +278,23 @@ export default {
 }
 </script>
 
-<style>
-table.v-table thead tr {
-  color: red !important;
-}
-tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, .05);
-}
+<style scoped>
+  table.v-table thead tr {
+    color: red !important;
+  }
+  tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, .05);
+  }
+  .bottom-gradient {
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
+  }
+
+  .repeating-gradient {
+    background-image: repeating-linear-gradient(-45deg,
+                        rgba(255,0,0,.25),
+                        rgba(255,0,0,.25) 5px,
+                        rgba(0,0,255,.25) 5px,
+                        rgba(0,0,255,.25) 10px
+                      );
+  }
 </style>
