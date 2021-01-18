@@ -8,9 +8,9 @@ import Meta from 'vue-meta'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
+  routes: paths,
   base: '/admin',
   mode: 'history',
-  routes: paths
 });
 
 

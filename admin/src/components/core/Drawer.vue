@@ -32,9 +32,9 @@
                             </v-expansion-panel-header>
                             <v-expansion-panel-content>
                                 <v-list>
-                                    <v-list-item v-for="(subItem, i) in link.subItems" :key="i" :to="subItem.to">
+                                    <v-list-item v-for="(subItem, i) in link.subItems" :key="i" :to="`/dashboard/tables/${subItem.name}`">
                                         <v-list-item-title>
-                                            {{subItem.text}}
+                                            {{subItem.slag}}
                                         </v-list-item-title>
                                     </v-list-item>   
                                 </v-list>
@@ -61,42 +61,12 @@ export default {
                 to: '',
                 icon: 'mdi-table-of-contents',
                 text: '',
-                subItems: [
-                    {
-                        to: '/',
-                        text: 'Користувачі'
-                    }
-                ]
+                subItems: []
             },
             {
-                to: '/dashboard/table-list',
-                icon: 'mdi-clipboard-outline',
-                text: 'Table List'
-            },
-            {
-                to: '/dashboard/user-tables',
+                to: '/dashboard/user-profile',
                 icon: 'mdi-table-edit',
-                text: 'Users Table'
-            },
-            {
-                to: '/dashboard/typography',
-                icon: 'mdi-format-font',
-                text: 'Typography'
-            },
-            {
-                to: '/dashboard/icons',
-                icon: 'mdi-chart-bubble',
-                text: 'Icons'
-            },
-            {
-                to: '/dashboard/maps',
-                icon: 'mdi-map-marker',
-                text: 'Maps'
-            },
-            {
-                to: '/dashboard/notifications',
-                icon: 'mdi-bell',
-                text: 'Notifications'
+                text: 'Обліковий запис'
             }
         ],
         responsive: false
@@ -114,6 +84,7 @@ export default {
     },
     mounted () {
         this.onResponsiveInverted();
+        this.getTables();
         window.addEventListener('resize', this.onResponsiveInverted);
     },
     beforeDestroy () {
@@ -127,6 +98,15 @@ export default {
             } else {
                 this.responsive = false;
             }
+        },
+        getTables() {
+            this.$store.dispatch('getTables')
+                .then(response => {
+                    this.links[1].subItems = response
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
     }
 }

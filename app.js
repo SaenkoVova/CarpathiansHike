@@ -10,6 +10,7 @@ const PlacesRoute = require('./routes/places.route');
 const RoutesRoute = require('./routes/route.route');
 const ReviewRoute = require('./routes/review.route');
 const UserRoute = require('./routes/user.route');
+const TablesRoute = require('./routes/tables.route');
 
 const PORT = config.get('port') || 5000;
 
@@ -22,6 +23,7 @@ app.use('/api/categories', CategoriesRoute);
 app.use('/api/places', PlacesRoute);
 app.use('/api/routes', RoutesRoute);
 app.use('/api/reviews', ReviewRoute);
+app.use('/api/tables/', TablesRoute);
 
 
 if(process.env.NODE_ENV === 'production') {

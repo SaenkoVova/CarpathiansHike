@@ -28,5 +28,17 @@ export default {
             delete axios.defaults.headers.common['Authorization']
             resolve()
         })
+    },
+    getTables({commit}) {
+        return new Promise((resolve, reject) => {
+            axios.get('/tables')
+                .then(response => {
+                    commit('setTableList', response.data.collections);
+                    resolve(response.data.collections);
+                })
+                .catch(err => {
+                    reject(err);
+                })
+        })
     }
 }

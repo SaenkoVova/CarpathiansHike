@@ -45,7 +45,16 @@ export default [
                 component: () => import('@/components/DashViews/Dashboard.vue')
             },
             {
-                path: '/:tableName',
+                path: 'user-profile',
+                meta: {
+                    name: 'UserProfile',
+                    requiredAuth: true
+                },
+                component: () => import('@/components/DashViews/UserProfile.vue')
+            },
+            {
+                path: 'tables/:tableName',
+                props: true,
                 component: () => import('@/components/DashViews/TemplateTables.vue')
             }
         ]
