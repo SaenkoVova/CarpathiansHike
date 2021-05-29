@@ -41,6 +41,12 @@
                     </tr>
                 </table>
             </div>
+            <div>
+              <h1 class="title">Олюблені маршрути</h1>
+              <v-btn color="orange" dark v-for="(item, index) in user.routes" :key="index" :to="`/routes/${item._id}`">
+                {{item.path}}
+              </v-btn>
+            </div>
           </v-col>
           <v-col>
               <v-row>
@@ -151,7 +157,7 @@ export default {
         }
     },
     mounted() {
-        this.getUser();
+        this.getUser()
     },
     components: {
         PagesHeadline,
