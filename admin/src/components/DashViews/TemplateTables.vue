@@ -45,8 +45,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem[`${propertyName}`]"
-                      :label="propertyName"
+                      v-model="editedItem[`${value.value}`]"
+                      :label="value.text"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -101,6 +101,12 @@
           >
             <div class="fill-height bottom-gradient"></div>
           </v-img>
+          <v-select v-else-if="header.type === 'Array'"
+            :items="convertArrayFieldToString(index[header.value])"
+            label="Список"
+            solo
+            multiple
+          ></v-select>
           <div v-else-if="header.value === 'actions'">
             <v-icon
               small
@@ -172,30 +178,79 @@ export default {
     dialogDelete (val) {
         val || this.closeDelete()
     },
+    '$route' () {
+      console.log(this.$route)
+      this.buildTable();
+    },
     currentTable() {
-      this.getTableFrame()
-        .then(() => {
-          this.$http.get(`/tables/read`, {
-            params: {tableName: this.tableName}
-          })
-            .then(response => {
-              this.collection = response.data.collection;
-            })
-            .catch(err => {
-              console.log(err)
-            })
-        })
+      this.buildTable();
     }
   },
   created () {
     if(this.$store.getters.tableList.length != 0)
     {
+      this.buildTable();
+    }
+  },
+
+  methods: {
+    getTableFrame () {
+      return new Promise((resolve) => {
+        this.collection = [];
+        this.headers = [];
+        this.editedItem = {};
+        this.defaultItem = {};
+        this.tableInfo = this.$store.getters.tableList.find(t => t.name === this.tableName);
+        for(let item of this.tableInfo.collectionFileds) {
+          if(item.toDisplay) {
+            let field = {
+              text: item.slag,
+              value: item.name,
+              type: item.fieldType
+            }
+            this.headers.push(field);
+          }
+        }
+        this.headers.push({ text: 'Дії', value: 'actions', sortable: false });
+        this.addFieldsConfigurationColumn();
+        for(let item of this.headers) {
+          if(item.value != 'actions') {
+            this.editedItem[`${item.value}`] = {
+            value: 0,
+            text: item.text
+          };
+          }
+        }
+        this.defaultItem = this.editedItem;
+        
+        resolve()
+      })
+    },
+    convertArrayFieldToString(list) {
+      let lines = [];
+      for(let item of list) {
+        let line = '';
+        for (const [key, value] of Object.entries(item)) {
+          console.log(key)
+          line += `${key} : ${value.toString()} | `
+        }
+        lines.push(line);
+      }
+      return lines;
+    },
+    addFieldsConfigurationColumn() {
+      let currentUrl = window.location.pathname.split('/')
+      if(currentUrl[currentUrl.length - 1] === 'collections') {
+        this.headers = this.headers.filter(i => i.value != 'actions');
+        this.headers.push({text: 'Поля', value: 'collectionFileds', type: 'Array', sortable: false})
+      }
+    },
+    buildTable() {
       this.getTableFrame()
-      .then(() => {
+        .then(() => {
         this.$http.get('/tables/read', {
           params: {
             tableName: this.tableName,
-
           }
         })
           .then(response => {
@@ -205,34 +260,7 @@ export default {
             console.log(err)
           })
       })
-    }
-  },
-
-  methods: {
-
-    getTableFrame () {
-      return new Promise((resolve) => {
-        this.tableInfo = this.$store.getters.tableList.find(t => t.name === this.tableName);
-        for(let item of this.tableInfo.collectionFileds) {
-          if(item.name != '_id') {
-            let field = {
-              text: item.slag,
-              value: item.name,
-              type: item.fieldType
-            }
-            this.headers.push(field);
-          }
-        }
-        this.headers.push({ text: 'Дії', value: 'actions', sortable: false })
-        for(let item of this.headers) {
-          this.editedItem[`${item.value}`] = 0;
-        }
-        console.log(this.headers)
-        this.defaultItem = this.editedItem;
-        resolve()
-      })
     },
-    
     editItem (item) {
       this.editedIndex = this.collection.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -297,4 +325,9 @@ export default {
                         rgba(0,0,255,.25) 10px
                       );
   }
+  td {
+    border: 1px solid #333;
+    padding: 5px;
+  }
+
 </style>

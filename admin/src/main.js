@@ -8,6 +8,9 @@ import NProgres from 'nprogress';
 import { sync } from 'vuex-router-sync';
 import './plugins/axios';
 import './plugins/chartist';
+import JsonCSV from 'vue-json-csv'
+
+Vue.component('downloadCsv', JsonCSV)
 
 Vue.prototype.$http = axios;
 

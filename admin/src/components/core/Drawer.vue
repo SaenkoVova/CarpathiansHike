@@ -8,7 +8,7 @@
                 <v-img src="https://i2.rozetka.ua/goods/2284114/24735816_images_2284114400.jpg"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-                <v-list-item-title>В похід Карпатами</v-list-item-title>
+                <v-list-item-title>В мандри Карпатами</v-list-item-title>
             </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -52,22 +52,27 @@ import { mapActions, mapState } from 'vuex'
 export default {
     data: () => ({
         links: [
-            {
-                to: '/',
-                icon: 'mdi-view-dashboard',
-                text: 'Головна'
-            },
-            {
-                to: '',
-                icon: 'mdi-table-of-contents',
-                text: '',
-                subItems: []
-            },
-            {
-                to: '/dashboard/user-profile',
-                icon: 'mdi-table-edit',
-                text: 'Обліковий запис'
-            }
+          {
+              to: '/',
+              icon: 'mdi-view-dashboard',
+              text: 'Головна'
+          },
+          {
+              to: '',
+              icon: 'mdi-table-of-contents',
+              text: '',
+              subItems: []
+          },
+          {
+              to: '/dashboard/user-profile',
+              icon: 'mdi-table-edit',
+              text: 'Обліковий запис'
+          },
+          {
+            to: '/dashboard/reporting',
+            icon: 'mdi-file-chart',
+            text: 'Звіти'
+          }
         ],
         responsive: false
     }),

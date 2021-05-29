@@ -53,6 +53,14 @@ export default [
                 component: () => import('@/components/DashViews/UserProfile.vue')
             },
             {
+              path: 'reporting',
+              meta: {
+                  name: 'Reporting',
+                  requiredAuth: true
+              },
+                component: () => import('@/components/DashViews/Reporting')
+            },
+            {
                 path: 'tables/:tableName',
                 props: true,
                 component: () => import('@/components/DashViews/TemplateTables.vue')

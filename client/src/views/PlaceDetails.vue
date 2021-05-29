@@ -34,6 +34,9 @@
                     <div>
                         <p>Висота над рівнем моря {{place.place.height}} м</p>
                     </div>
+                    <div>
+                      <v-btn color="orange" dark @click="addToBookmarks">Додати до закладок</v-btn>
+                    </div>
                 </v-col>
                 <v-col :md="6" :sm="12" :xs="12">
                     <div>
@@ -95,6 +98,23 @@
                 </v-row>
             </v-container>
         </div>
+        <v-snackbar
+            v-model="snackbar"
+            :timeout="timeout"
+        >
+          {{ text }}
+
+          <template v-slot:action="{ attrs }">
+            <v-btn
+                color="blue"
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+            >
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -115,6 +135,9 @@ export default {
     data: () => ({
         place: null,
         error: null,
+        snackbar: false,
+        text: 'Закладку створено',
+        timeout: 2000,
     }),
     props: {
         'id': {
@@ -124,7 +147,8 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'getProcessing'
+            'getProcessing',
+            'getToken'
         ])
     },
     mounted() {
@@ -134,6 +158,21 @@ export default {
         ...mapMutations([
             'SET_PROCESSING'
         ]),
+        addToBookmarks() {
+          Axios.post(`${proxy.domen}/user/addPlaceToBookmarks`, {
+            placeId: this.id
+          }, {
+            headers: {
+              Authorization: `Bearer ${this.getToken}`
+            }
+          })
+            .then(res => {
+              console.log(res.data)
+              if(res.status === 200) {
+                this.snackbar = true;
+              }
+            })
+        },
         pushReviewImageToGallery(images) {
             this.place.place.images = [...this.place.place.images, ...images]
         },

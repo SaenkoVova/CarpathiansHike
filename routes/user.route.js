@@ -56,4 +56,10 @@ router.post(
     UserController.updateAvatar
 );
 
+router.post(
+    '/addPlaceToBookmarks',
+    AuthMiddleware,
+    UserController.addPlaceToBookmarks
+)
+
 module.exports = router

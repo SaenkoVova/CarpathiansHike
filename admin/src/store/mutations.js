@@ -16,5 +16,8 @@ export default {
     },
     setTableList(state, tableList) {
         state.tableList = tableList;
+    },
+    clearTableList(state) {
+        state.tableList = [];
     }
 }

@@ -1,8 +1,8 @@
 const { Types } = require("mongoose");
 const User = require("../models/User");
+const Place = require('../models/Place');
 const bcrypt = require('bcryptjs');
 const sharp = require("sharp");
-const { findOneAndUpdate } = require("../models/User");
 const fs = require('fs');
 
 module.exports.getUser = async (req, res) => {
@@ -95,6 +95,19 @@ module.exports.updateAvatar = async (req, res) => {
         });
     } catch(e) {
         console.log(e)
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+module.exports.addPlaceToBookmarks = async (req, res) => {
+    try {
+        const {placeId} = req.body;
+        await User.findOneAndUpdate(
+            {_id: Types.ObjectId(req.user.userId)},
+            {$push: {places: Types.ObjectId(placeId)}}
+        )
+        res.status(200).json({message: 'added'})
+    } catch (e) {
         res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
     }
 }
