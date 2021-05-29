@@ -60,6 +60,12 @@ router.post(
     '/addPlaceToBookmarks',
     AuthMiddleware,
     UserController.addPlaceToBookmarks
-)
+);
+
+router.post(
+    '/addRouteToBookmarks',
+    AuthMiddleware,
+    UserController.addRouteToBookmarks
+);
 
 module.exports = router

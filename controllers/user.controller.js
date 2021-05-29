@@ -99,6 +99,19 @@ module.exports.updateAvatar = async (req, res) => {
     }
 }
 
+module.exports.addRouteToBookmarks = async (req, res) => {
+    try {
+        const {routeId} = req.body;
+        await User.findOneAndUpdate(
+            {_id: Types.ObjectId(req.user.userId)},
+            {$push: {routes: Types.ObjectId(routeId)}}
+        )
+        res.status(200).json({message: 'added'})
+    } catch (e) {
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
 module.exports.addPlaceToBookmarks = async (req, res) => {
     try {
         const {placeId} = req.body;
