@@ -46,16 +46,16 @@
                 </l-marker>
             </l-map>
         </div>
-        <div v-if="loadFullMap" style="height: 100vh">
+        <div v-if="loadFullMap && !loading" style="height: 100vh">
             <l-map
-            :zoom="15"
-            :center="[50.0, 50.0]"
+            :zoom="10"
+            :center="[48.0, 24.0]"
             @update:zoom="zoomUpdated"
             @update:center="centerUpdated"
             @update:bounds="boundsUpdated"
             >
                 <l-tile-layer :url="url"></l-tile-layer>
-                <l-marker :lat-lng="[50.0, 50.0]">
+                <l-marker v-for="(location, index) in mapLocations" :lat-lng="[location.lt, location.lg]" :key="index">
                     <l-icon
                             :icon-size="dynamicSize"
                             :icon-anchor="dynamicAnchor"
@@ -70,6 +70,8 @@
 <script>
 
 import {LMap, LTileLayer, LMarker, LIcon, LGeoJson} from 'vue2-leaflet';
+import Axios from "axios";
+import proxy from "@/proxy";
 
 export default {
     props: {
@@ -91,7 +93,9 @@ export default {
             url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             zoom: 12,
             iconSize: 40,
-            geoJson: null
+            geoJson: null,
+            loading: false,
+            mapLocations: []
         };
     },
     computed: {
@@ -118,6 +122,15 @@ export default {
         },
         boundsUpdated (bounds) {
             this.bounds = bounds;
+        },
+        loadPlaces() {
+          this.loading = true;
+          Axios.get(`${proxy.domen}/places/getMapLocations`)
+            .then(res => {
+              console.log(res)
+              this.mapLocations = res.data
+              this.loading = false;
+            })
         }
     },
     created() {
@@ -125,8 +138,10 @@ export default {
             this.geoJson = require(`../../public/geoJson/${this.route.route.geoJson}`)
         }
         if(this.place) {
-            console.log(this.place)
             this.geoJson = require(`../../public/geoJson/${this.place.geoJson}`)
+        }
+        if(this.loadFullMap) {
+          this.loadPlaces();
         }
     }
 }

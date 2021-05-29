@@ -16,7 +16,7 @@ module.exports.getPlaces = async (req, res) => {
         let places = [];
         if(page === 1) {
             placesCursor = await Place.find({title: {$regex: search}}, 'title info height previewImage categoryId').limit(showedItems).cursor();
-            if(selected != -1) {
+            if(selected !== -1) {
                 placesCursor = await Place.find({'categoryId': {$in: selected}, title: {$regex: search}},
                 'title info height previewImage categoryId').limit(showedItems).cursor();
             }
@@ -57,6 +57,15 @@ module.exports.getPlaceById = async (req, res) => {
     }
 }
 
+
+module.exports.getMapLocations = async (req, res) => {
+    try {
+        const places = await Place.find({});
+        res.status(200).json(places)
+    } catch (e) {
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
 
 // const place = new Place({
 //     categoryId: Types.ObjectId("5f995f9b85986607a0ab7d29"),

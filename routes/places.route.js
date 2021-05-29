@@ -10,6 +10,11 @@ router.get(
 router.get(
     '/getPlaceById',
     PlacesController.getPlaceById
-)
+);
+
+router.get(
+    '/getMapLocations',
+    PlacesController.getMapLocations
+);
 
 module.exports = router;
