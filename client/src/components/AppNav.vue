@@ -23,16 +23,8 @@ export default {
                 path: '/places'
             },
             {
-                title: 'Погода',
-                path: '/weather'
-            },
-            {
                 title: 'Про сайт',
                 path: '/about'
-            },
-            {
-                title: 'Блог',
-                path: '/blog'
             }
         ]
     })

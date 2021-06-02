@@ -16,7 +16,7 @@ module.exports.getPlaces = async (req, res) => {
         let places = [];
         if(page === 1) {
             placesCursor = await Place.find({title: {$regex: search}}, 'title info height previewImage categoryId').limit(showedItems).cursor();
-            if(selected !== -1) {
+            if(selected != -1) {
                 placesCursor = await Place.find({'categoryId': {$in: selected}, title: {$regex: search}},
                 'title info height previewImage categoryId').limit(showedItems).cursor();
             }
@@ -38,6 +38,7 @@ module.exports.getPlaces = async (req, res) => {
         res.status(200).json({places});
         
     } catch(e) {
+        console.log(e)
         res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
     }
 }

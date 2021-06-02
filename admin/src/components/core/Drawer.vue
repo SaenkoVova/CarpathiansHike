@@ -24,24 +24,6 @@
                     <v-icon>{{link.icon}}</v-icon>
                 </v-list-item-action>
                 <v-list-item-title v-if="link.text" v-text="link.text" />
-                <v-list-item-content v-if="link.subItems">
-                    <v-expansion-panels flat style="background: transparent; padding-left: 0;">
-                        <v-expansion-panel style="background: transparent; padding-left: 0;">
-                            <v-expansion-panel-header style="background: transparent; padding-left: 0;">
-                                Таблиці
-                            </v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                                <v-list>
-                                    <v-list-item v-for="(subItem, i) in link.subItems" :key="i" :to="`/dashboard/tables/${subItem.name}`">
-                                        <v-list-item-title>
-                                            {{subItem.slag}}
-                                        </v-list-item-title>
-                                    </v-list-item>   
-                                </v-list>
-                            </v-expansion-panel-content>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
-                </v-list-item-content>
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
@@ -53,15 +35,29 @@ export default {
     data: () => ({
         links: [
           {
-              to: '/',
-              icon: 'mdi-view-dashboard',
-              text: 'Головна'
+            to: '/dashboard',
+            icon: 'mdi-table-edit',
+            text: 'Дашборд'
           },
           {
-              to: '',
-              icon: 'mdi-table-of-contents',
-              text: '',
-              subItems: []
+            to: '/users',
+            icon: 'mdi-table-edit',
+            text: 'Користувачі'
+          },
+          {
+            to: '/place-categories',
+            icon: 'mdi-table-edit',
+            text: 'Категорії'
+          },
+          {
+            to: '/massif',
+            icon: 'mdi-table-edit',
+            text: 'Гірські масиви'
+          },
+          {
+            to: '/locations',
+            icon: 'mdi-table-edit',
+            text: 'Локації'
           },
           {
               to: '/dashboard/user-profile',
@@ -89,7 +85,6 @@ export default {
     },
     mounted () {
         this.onResponsiveInverted();
-        this.getTables();
         window.addEventListener('resize', this.onResponsiveInverted);
     },
     beforeDestroy () {
@@ -103,15 +98,6 @@ export default {
             } else {
                 this.responsive = false;
             }
-        },
-        getTables() {
-            this.$store.dispatch('getTables')
-                .then(response => {
-                    this.links[1].subItems = response
-                })
-                .catch(err => {
-                    console.log(err)
-                })
         }
     }
 }

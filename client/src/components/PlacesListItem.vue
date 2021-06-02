@@ -16,9 +16,6 @@
     </v-img>
 
     <v-card-subtitle class="pb-0 d-flex align-center">
-        <span>
-            <img :src="require(`../assets/${place.category.image}`)" height="32" width="32">
-        </span>
         <span class="ml-2">
             {{place.category.title}}
         </span>

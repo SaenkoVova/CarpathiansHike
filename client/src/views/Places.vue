@@ -77,7 +77,7 @@ export default {
             params: {
               showedItems: this.showedItems,
               page: this.page,
-              selected: selectedCategories.join(',') || -1,
+              selected: selectedCategories.length ? selectedCategories.join(',') : -1,
               search: search || ''
             }
           }

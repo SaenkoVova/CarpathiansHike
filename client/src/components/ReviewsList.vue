@@ -21,7 +21,7 @@
                 :key="item.title"
                 >
                 <v-list-item-content>
-                    <v-list-item-title>{{item.owner.name}} {{item.creationTime}}</v-list-item-title>
+                    <v-list-item-title>{{item.creationTime}}</v-list-item-title>
                     <v-list-item-subtitle v-html="item.text"></v-list-item-subtitle>
                     <div class="d-flex">
                       <div v-for="(filename, index) in item.attachments" :key="index" style="margin: 5px">

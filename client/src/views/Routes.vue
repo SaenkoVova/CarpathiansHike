@@ -3,9 +3,6 @@
       <pages-headline :headline="`Пішохідні маршрути в Карпатах`"></pages-headline>
       <v-row>
           <v-col>
-              <v-btn dark block>Допомога у виборі маршруту</v-btn>
-          </v-col>
-          <v-col>
               <v-btn block dark @click="show = !show">Показати фільтри</v-btn>
           </v-col>
       </v-row>

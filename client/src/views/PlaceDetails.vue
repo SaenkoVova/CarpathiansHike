@@ -24,7 +24,7 @@
                     <v-container fluid class="d-flex">
                         <p v-if="place.massif.title">{{place.massif.title}}</p>
                         <v-spacer></v-spacer>
-                        <p>Додано користувачем: {{place.user.name}} Дата: {{place.place.creationDate}}</p>
+                        <p>Дата: {{place.place.creationDate}}</p>
                     </v-container>
                     <div>
                         <article>

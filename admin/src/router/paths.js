@@ -45,6 +45,26 @@ export default [
                 component: () => import('@/components/DashViews/Dashboard.vue')
             },
             {
+                path: '/users',
+                name: 'Users',
+                component: () => import('@/components/DashViews/Users.vue')
+            },
+            {
+                path: '/place-categories',
+                name: 'PlaceCategories',
+                component: () => import('@/components/DashViews/PlaceCategories.vue')
+            },
+            {
+                path: '/massif',
+                name: 'Massif',
+                component: () => import('@/components/DashViews/Massif.vue')
+            },
+            {
+                path: '/locations',
+                name: 'Locations',
+                component: () => import('@/components/DashViews/Locations.vue')
+            },
+            {
                 path: 'user-profile',
                 meta: {
                     name: 'UserProfile',
@@ -59,11 +79,6 @@ export default [
                   requiredAuth: true
               },
                 component: () => import('@/components/DashViews/Reporting')
-            },
-            {
-                path: 'tables/:tableName',
-                props: true,
-                component: () => import('@/components/DashViews/TemplateTables.vue')
             }
         ]
     }
