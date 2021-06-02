@@ -27,12 +27,37 @@ router.get(
     AdminController.loadMassifs
 )
 
+router.get(
+    '/loadLocations',
+    AuthMiddleware,
+    AdminController.loadLocations
+)
+
+router.get(
+    '/loadRouteCategories',
+    AuthMiddleware,
+    AdminController.loadRouteCategories
+)
+
 
 router.post(
     '/addMassif',
     AuthMiddleware,
     AdminController.addMassif
 )
+
+router.post(
+    '/addRoute',
+    AuthMiddleware,
+    AdminController.addRoute
+)
+
+router.post(
+    '/addRouteCategory',
+    AuthMiddleware,
+    AdminController.addRouteCategory
+)
+
 
 router.post(
     '/addLocation',

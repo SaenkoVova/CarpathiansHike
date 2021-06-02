@@ -60,9 +60,14 @@ export default {
             text: 'Локації'
           },
           {
-              to: '/dashboard/user-profile',
-              icon: 'mdi-table-edit',
-              text: 'Обліковий запис'
+            to: '/routes',
+            icon: 'mdi-table-edit',
+            text: 'Маршрути'
+          },
+          {
+            to: '/routes-categories',
+            icon: 'mdi-table-edit',
+            text: 'Категорії маршрутів'
           },
           {
             to: '/dashboard/reporting',

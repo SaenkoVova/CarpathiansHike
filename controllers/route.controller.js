@@ -21,6 +21,41 @@ module.exports.getRoutes = async (req, res) => {
     }
 }
 
+module.exports.loadRoutesDurations = async (req, res) => {
+    try {
+        const routes = await Route.find({}, 'duration')
+        res.status(200).json(routes)
+    } catch(e) {
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+module.exports.loadByDuration = async (req, res) => {
+    try {
+        console.log(req.query)
+        const routes = await Route.find({
+            duration: req.query.duration
+        })
+        res.status(200).json(routes)
+    } catch(e) {
+        console.log(e)
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+module.exports.loadByLevel = async (req, res) => {
+    try {
+        const routes = await Route.find({
+            level: req.query.level
+        })
+        res.status(200).json(routes)
+    } catch(e) {
+        console.log(e)
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+
 module.exports.getRouteById = async(req, res) => {
     try {
         const {id} = req.query;

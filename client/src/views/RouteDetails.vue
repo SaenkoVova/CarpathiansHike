@@ -52,7 +52,7 @@
                 </v-col>
             </v-row>
             <v-row>
-                <Map :route="route"></Map>
+                <Map :route="route" style="z-index: 10;"></Map>
             </v-row>
         </div>
     </v-container>

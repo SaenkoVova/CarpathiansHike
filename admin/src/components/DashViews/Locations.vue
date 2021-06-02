@@ -74,16 +74,29 @@
         <thead>
         <tr>
           <th class="text-left">
-            Гірський массив
+            Назва
+          </th>
+          <th class="text-left">
+            Висота над рівнем моря
+          </th>
+          <th class="text-left">
+            Дозволити відгуки
           </th>
         </tr>
         </thead>
         <tbody>
         <tr
-            v-for="item in massifs"
+            v-for="item in locations"
             :key="item._id"
         >
           <td>{{ item.title }}</td>
+          <td>{{ item.height }} м</td>
+          <td>
+            <v-checkbox
+                :disabled="true"
+                v-model="item.allowReview"
+            ></v-checkbox>
+          </td>
         </tr>
         </tbody>
       </template>
@@ -97,6 +110,7 @@ import axios from "axios";
 export default {
   name: 'Massif',
   data: () => ({
+    locations: [],
     massifs: [],
     categories: [],
     categoryId: null,
@@ -119,12 +133,10 @@ export default {
   }),
   methods: {
     setCategory(event) {
-      console.log(event)
       this.categoryId = event.split(',')[1].trim()
     },
     setMassif(event) {
       this.massifId = event.split(',')[1].trim()
-      console.log(this.massifId)
     },
     addLocation() {
       axios.post('/admin/addLocation', {
@@ -174,10 +186,22 @@ export default {
             this.categories = res.data.map(i => i.title + ', ' + i._id)
           })
     },
+    loadLocations() {
+      axios.get('/admin/loadLocations', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+          .then(res => {
+            console.log(res.data)
+            this.locations = res.data
+          })
+    }
   },
   mounted() {
     this.loadMassifs();
     this.loadCategories();
+    this.loadLocations();
   }
 }
 </script>

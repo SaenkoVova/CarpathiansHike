@@ -65,12 +65,14 @@ export default [
                 component: () => import('@/components/DashViews/Locations.vue')
             },
             {
-                path: 'user-profile',
-                meta: {
-                    name: 'UserProfile',
-                    requiredAuth: true
-                },
-                component: () => import('@/components/DashViews/UserProfile.vue')
+                path: '/routes',
+                name: 'Routes',
+                component: () => import('@/components/DashViews/Routes.vue')
+            },
+            {
+                path: '/routes-categories',
+                name: 'RoutesCategories',
+                component: () => import('@/components/DashViews/RoutesCategories.vue')
             },
             {
               path: 'reporting',

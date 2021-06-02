@@ -12,4 +12,19 @@ router.get(
     RouteController.getRouteById
 )
 
+router.get(
+    '/loadByDuration',
+    RouteController.loadByDuration
+)
+
+router.get(
+    '/loadByLevel',
+    RouteController.loadByLevel
+)
+
+router.get(
+    '/loadRoutesDurations',
+    RouteController.loadRoutesDurations
+)
+
 module.exports = router;

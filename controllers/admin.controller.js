@@ -1,8 +1,9 @@
 const User = require('../models/User');
 const Massif = require('../models/Massif');
 const Place = require('../models/Place');
+const Route = require('../models/Route');
 const PlaceCategory = require('../models/PlaceCategory');
-// const config = require('config');
+const RouteCategory = require('../models/RouteCategory');
 const ObjectID = require('mongoose').Types.ObjectId;
 
 exports.loadUsers = async (req, res) => {
@@ -34,10 +35,31 @@ exports.addCategory = async (req, res) => {
     }
 }
 
+exports.addRouteCategory = async (req, res) => {
+    try {
+        const {title} = req.body;
+        let category = new RouteCategory({title});
+        await category.save();
+        res.status(200).json({message: 'added'});
+    } catch(e) {
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+
 exports.loadMassifs = async (req, res) => {
     try {
         const massifs = await Massif.find();
         res.status(200).json(massifs);
+    } catch(e) {
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+exports.loadRouteCategories = async (req, res) => {
+    try {
+        const routeCategories = await RouteCategory.find();
+        res.status(200).json(routeCategories);
     } catch(e) {
         res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
     }
@@ -100,6 +122,60 @@ exports.addLocation = async (req, res) => {
         res.status(200).json({message: 'added'});
     } catch(e) {
         console.log(e)
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+
+exports.addRoute = async (req, res) => {
+    try {
+        const {
+            path,
+            previewImage,
+            images,
+            geoJson,
+            start,
+            end,
+            distance,
+            level,
+            description,
+            routeCategoriesId,
+            duration,
+            routePeaks,
+            routeInteresting,
+            nearestPlaces,
+            allowReview
+        } = req.body
+        let route = new Route({
+            path,
+            previewImage,
+            images,
+            geoJson,
+            start: ObjectID(start),
+            end: ObjectID(end),
+            distance,
+            level,
+            description,
+            routeCategoriesId: ObjectID(routeCategoriesId),
+            duration,
+            routePeaks,
+            routeInteresting,
+            nearestPlaces,
+            allowReview
+        })
+        await route.save();
+        res.status(200).json({message: 'added'});
+    } catch(e) {
+        console.log(e)
+        res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
+    }
+}
+
+exports.loadLocations = async (req, res) => {
+    try {
+        const massifs = await Place.find();
+        res.status(200).json(massifs);
+    } catch(e) {
         res.status(500).json({message: 'Щось пішло не так, спробуйте знову'});
     }
 }

@@ -20,9 +20,6 @@
             {{place.category.title}}
         </span>
         <v-spacer></v-spacer>
-        <span>
-            5 коментарів
-        </span>
     </v-card-subtitle>
 
     <v-card-text class="text--primary">

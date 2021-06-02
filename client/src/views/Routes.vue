@@ -6,7 +6,7 @@
               <v-btn block dark @click="show = !show">Показати фільтри</v-btn>
           </v-col>
       </v-row>
-      <routes-filter v-if="show"></routes-filter>
+      <routes-filter @loadByDuration="loadByDuration($event)" @loadByLevel="loadByLevel($event)" v-if="show"></routes-filter>
       <v-container v-if="getProcessing" class="d-flex justify-center">
         <v-progress-circular 
         :size="200"
@@ -50,6 +50,27 @@ export default {
         ...mapMutations([
             'SET_PROCESSING'
         ]),
+        loadByDuration($event) {
+          Axios.get(`${proxy.domen}/routes/loadByDuration`, {
+            params: {
+              duration: $event
+            }
+          })
+            .then(res => {
+              this.routes = res.data
+              console.log(res)
+            })
+        },
+        loadByLevel($event) {
+          Axios.get(`${proxy.domen}/routes/loadByLevel`, {
+            params: {
+              level: $event
+            }
+          })
+              .then(res => {
+                this.routes = res.data
+              })
+        },
         getRoutes() {
             this.SET_PROCESSING(true)
             Axios.get(`${proxy.domen}/routes/getRoutes`,
